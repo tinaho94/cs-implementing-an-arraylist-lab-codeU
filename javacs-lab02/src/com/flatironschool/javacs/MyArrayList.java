@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.NoSuchElementException;
 
 /**
  * @author downey
@@ -63,6 +64,25 @@ public class MyArrayList<E> implements List<E> {
 			throw new IndexOutOfBoundsException();
 		}
 		// TODO: fill in the rest of this method
+		if(array[index] == null) {
+			array[index] = element;
+			size++;
+		} else {
+			// [1, 3, 5, 2]
+			// [1, 2, 3
+			int i = index;
+			int j = i + 1;
+			E temp = null;
+			while(i <= size) {
+				temp = array[j];
+				array[j] = array[i];
+				array[j+1] = temp;				
+				i++;
+				j++;
+			}
+			array[index] = element;
+			size++;
+		}
 	}
 
 	@Override
@@ -111,8 +131,12 @@ public class MyArrayList<E> implements List<E> {
 
 	@Override
 	public int indexOf(Object target) {
-		// TODO: fill in this method
-		return 0;
+		for(int i = 0; i < size; i++) {
+			if (equals(target, array[i])) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	/** Checks whether an element of the array is the target.
@@ -182,8 +206,18 @@ public class MyArrayList<E> implements List<E> {
 
 	@Override
 	public E remove(int index) {
-		// TODO: fill in this method.
-		return null;
+		if(index < 0 || index >= size) {
+			throw new IndexOutOfBoundsException();
+		}
+		E elem = array[index];
+		int j = index + 1;
+		for(int i = index; j < size; i++) {
+			array[i] = array[j];
+			j++;
+		}
+		array[j] = null;
+		size--;
+		return elem;
 	}
 
 	@Override
@@ -202,8 +236,12 @@ public class MyArrayList<E> implements List<E> {
 
 	@Override
 	public E set(int index, E element) {
-		// TODO: fill in this method.
-		return null;
+		if(index < 0 || index >= size) {
+			throw new IndexOutOfBoundsException();
+		}
+		E temp = array[index];
+		array[index] = element;
+		return temp;
 	}
 
 	@Override
